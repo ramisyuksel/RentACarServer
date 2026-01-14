@@ -2,6 +2,7 @@
 using GenericRepository;
 using RentACarServer.Domain.Branches;
 using RentACarServer.Domain.Branches.ValueObjects;
+using RentACarServer.Domain.Shared;
 using TS.MediatR;
 using TS.Result;
 

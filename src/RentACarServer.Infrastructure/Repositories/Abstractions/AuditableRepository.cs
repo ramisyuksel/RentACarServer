@@ -5,7 +5,7 @@ using RentACarServer.Domain.Users;
 
 namespace RentACarServer.Infrastructure.Repositories.Abstractions;
 
-internal class AuditableRepository<TEntity, TContext> : Repository<TEntity, TContext>, IAuditableRepository<TEntity>
+public class AuditableRepository<TEntity, TContext> : Repository<TEntity, TContext>, IAuditableRepository<TEntity>
     where TEntity : Entity
     where TContext : DbContext
 {

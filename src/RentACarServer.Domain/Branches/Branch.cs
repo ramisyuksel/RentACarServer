@@ -1,5 +1,6 @@
 ﻿using RentACarServer.Domain.Abstractions;
 using RentACarServer.Domain.Branches.ValueObjects;
+using RentACarServer.Domain.Shared;
 
 namespace RentACarServer.Domain.Branches;
 

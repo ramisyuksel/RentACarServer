@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.RateLimiting;
 using RentACarServer.Application;
-using RentACarServer.Application.Services;
 using RentACarServer.Infrastructure;
 using RentACarServer.WebAPI;
 using RentACarServer.WebAPI.Middlewares;
@@ -95,6 +94,7 @@ app.MapControllers()
 
 app.MapAuth();
 app.MapBranch();
+app.MapRole();
 
 app.MapGet("/", () => Results.Ok("Hello World")).RequireAuthorization();
 
