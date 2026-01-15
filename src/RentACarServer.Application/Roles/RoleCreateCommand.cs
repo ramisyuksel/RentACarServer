@@ -1,12 +1,13 @@
 ﻿using FluentValidation;
 using GenericRepository;
+using RentACarServer.Application.Behaviors;
 using RentACarServer.Domain.Roles;
 using RentACarServer.Domain.Shared;
 using TS.MediatR;
 using TS.Result;
 
 namespace RentACarServer.Application.Roles;
-
+[Permission("branch:edit")]
 public sealed record RoleCreateCommand(string Name, bool IsActive) : IRequest<Result<string>>;
 
 public sealed class RoleCreateCommandValidator : AbstractValidator<RoleCreateCommand>

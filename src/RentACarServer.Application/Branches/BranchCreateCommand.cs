@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using GenericRepository;
+using RentACarServer.Application.Behaviors;
 using RentACarServer.Domain.Branches;
 using RentACarServer.Domain.Branches.ValueObjects;
 using RentACarServer.Domain.Shared;
@@ -7,7 +8,7 @@ using TS.MediatR;
 using TS.Result;
 
 namespace RentACarServer.Application.Branches;
-
+[Permission("branch:create")]
 public sealed record BranchCreateCommand(
     string Name,
     Address Address,

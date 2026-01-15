@@ -1,8 +1,9 @@
-﻿using RentACarServer.Domain.Roles;
+﻿using RentACarServer.Application.Behaviors;
+using RentACarServer.Domain.Roles;
 using TS.MediatR;
 
 namespace RentACarServer.Application.Roles;
-
+[Permission("role:view")]
 public sealed record RoleGetAllQuery : IRequest<IQueryable<RoleDto>>;
 
 internal sealed class RoleGetAllQueryHandler(IRoleRepository roleRepository) : IRequestHandler<RoleGetAllQuery, IQueryable<RoleDto>>

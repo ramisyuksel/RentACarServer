@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using RentACarServer.Application.Behaviors;
 using RentACarServer.Domain.Roles;
 using TS.MediatR;
 using TS.Result;
 
 namespace RentACarServer.Application.Roles;
-
+[Permission("role:view")]
 public record RoleGetQuery(Guid Id) : IRequest<Result<RoleDto>>;
 
 internal sealed class RoleGetQueryHandler(IRoleRepository roleRepository) : IRequestHandler<RoleGetQuery, Result<RoleDto>>
