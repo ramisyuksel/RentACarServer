@@ -7,7 +7,7 @@ using TS.MediatR;
 using TS.Result;
 
 namespace RentACarServer.Application.Roles;
-[Permission("branch:edit")]
+[Permission("role:create")]
 public sealed record RoleCreateCommand(string Name, bool IsActive) : IRequest<Result<string>>;
 
 public sealed class RoleCreateCommandValidator : AbstractValidator<RoleCreateCommand>
