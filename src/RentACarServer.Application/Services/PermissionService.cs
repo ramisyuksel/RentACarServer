@@ -3,7 +3,7 @@ using RentACarServer.Application.Behaviors;
 
 namespace RentACarServer.Application.Services;
 
-internal sealed class PermissionService
+public sealed class PermissionService
 {
     public List<string> GetAll()
     {

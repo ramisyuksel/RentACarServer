@@ -3,8 +3,9 @@ using RentACarServer.Domain.Shared;
 
 namespace RentACarServer.Domain.Roles;
 
-public sealed class Role : Entity
+public sealed class Role : Entity, IAggregate
 {
+    private readonly List<Permission> _permissions = new();
     public Role()
     {
         
@@ -15,7 +16,9 @@ public sealed class Role : Entity
         SetName(name);
         SetStatus(isActive);
     }
-    public Name Name { get; set; } = default!;
+    public Name Name { get; private set; } = default!;
+
+    public IReadOnlyCollection<Permission> Permissions => _permissions;
 
     #region Behaviors
 
@@ -24,5 +27,13 @@ public sealed class Role : Entity
         Name = name;
     }
 
+    public void SetPermissions(IEnumerable<Permission> permissions)
+    {
+        _permissions.Clear();
+        _permissions.AddRange(permissions);
+    }
+
     #endregion
 }
+
+public sealed record Permission(string Value);
