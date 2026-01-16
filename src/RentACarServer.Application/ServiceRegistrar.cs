@@ -10,7 +10,8 @@ public static class ServiceRegistrar
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-        services.AddScoped<PermissionService>(); 
+        services.AddScoped<PermissionService>();
+        services.AddScoped<PermissionCleanerService>();
         services.AddMediatR(cfr =>
         {
             cfr.RegisterServicesFromAssembly(typeof(ServiceRegistrar).Assembly);

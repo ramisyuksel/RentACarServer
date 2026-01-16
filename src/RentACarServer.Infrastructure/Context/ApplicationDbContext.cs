@@ -30,7 +30,7 @@ public sealed class ApplicationDbContext(DbContextOptions options) : DbContext(o
     {
         configurationBuilder.Properties<IdentityId>().HaveConversion<IdentityIdValueConverter>();
         configurationBuilder.Properties<decimal>().HaveColumnType("decimal(18,2)");
-        configurationBuilder.Properties<string>().HaveColumnType("varchar(MAX)");
+        configurationBuilder.Properties<string>().HaveColumnType("nvarchar(MAX)");
         base.ConfigureConventions(configurationBuilder);
     }
 
