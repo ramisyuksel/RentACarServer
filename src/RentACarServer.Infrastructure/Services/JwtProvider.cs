@@ -1,30 +1,37 @@
 ﻿using GenericRepository;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using RentACarServer.Application.Services;
 using RentACarServer.Domain.LoginTokens;
 using RentACarServer.Domain.LoginTokens.ValueObjects;
+using RentACarServer.Domain.Roles;
 using RentACarServer.Domain.Users;
 using RentACarServer.Infrastructure.Options;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 namespace RentACarServer.Infrastructure.Services;
 
 internal sealed class JwtProvider(
     ILoginTokenRepository loginTokenRepository,
+    IRoleRepository roleRepository,
     IUnitOfWork unitOfWork,
     IOptions<JwtOptions> options) : IJwtProvider
 {
     public async Task<string> CreateTokenAsync(User user, CancellationToken cancellationToken = default)
     {
+        var role = await roleRepository.FirstOrDefaultAsync(i => i.Id == user.RoleId, cancellationToken);
+
         List<Claim> claims = new()
         {
             new Claim(ClaimTypes.NameIdentifier, user.Id),
             new Claim("fullName", user.FullName.Value),
-            new Claim("email",user.Email.Value)
+            new Claim("email",user.Email.Value),
+            new Claim("role", role.Name.Value),
+            new Claim("permissions", JsonSerializer.Serialize(role.Permissions))
         };
 
         SymmetricSecurityKey securityKey = new(Encoding.UTF8.GetBytes(options.Value.SecretKey));
