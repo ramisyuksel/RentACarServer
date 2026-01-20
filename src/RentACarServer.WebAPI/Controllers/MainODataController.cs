@@ -21,6 +21,7 @@ namespace RentACarServer.WebAPI.Controllers
             builder.EnableLowerCamelCase();
             builder.EntitySet<BranchDto>("branches");
             builder.EntitySet<RoleDto>("roles");
+            builder.EntitySet<UserDto>("users");
             return builder.GetEdmModel();
         }
 

@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using GenericRepository;
+using RentACarServer.Application.Behaviors;
 using RentACarServer.Application.Services;
 using RentACarServer.Domain.Abstractions;
 using RentACarServer.Domain.Users;
@@ -8,7 +9,7 @@ using TS.MediatR;
 using TS.Result;
 
 namespace RentACarServer.Application.Users;
-
+[Permission("user:update")]
 public record UserUpdateCommand(
     Guid Id,
     string FirstName,
@@ -16,7 +17,8 @@ public record UserUpdateCommand(
     string Email,
     string UserName,
     Guid? BranchId,
-    Guid RoleId) : IRequest<Result<string>>;
+    Guid RoleId,
+    bool IsActive) : IRequest<Result<string>>;
 
 public sealed class UserUpdateCommandValidator : AbstractValidator<UserUpdateCommand>
 {
@@ -76,6 +78,7 @@ internal sealed class UserUpdateCommandHandler(
         user.SetUserName(userName);
         user.SetBranchId(branchIdRecord);
         user.SetRoleId(roleId);
+        user.SetStatus(request.IsActive);
 
         userRepository.Update(user);
         await unitOfWork.SaveChangesAsync(cancellationToken);

@@ -65,7 +65,8 @@ public static class ExtensionMethods
                 userName,
                 password,
                 branchId,
-                roleId);
+                roleId,
+                true);
 
             await userRepository.AddAsync(user);
             await unitOfWork.SaveChangesAsync();

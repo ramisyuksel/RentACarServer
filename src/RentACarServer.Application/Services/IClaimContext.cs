@@ -4,4 +4,5 @@ public interface IClaimContext
 {
     Guid GetUserId();
     Guid GetBranchId();
+    string GetRoleName();
 }

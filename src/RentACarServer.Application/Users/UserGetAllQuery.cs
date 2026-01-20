@@ -1,10 +1,11 @@
-﻿using RentACarServer.Domain.Branches;
+﻿using RentACarServer.Application.Behaviors;
+using RentACarServer.Domain.Branches;
 using RentACarServer.Domain.Roles;
 using RentACarServer.Domain.Users;
 using TS.MediatR;
 
 namespace RentACarServer.Application.Users;
-
+[Permission("user:view")]
 public sealed record UserGetAllQuery : IRequest<IQueryable<UserDto>>;
 
 internal sealed class UserGetAllQueryHandler(

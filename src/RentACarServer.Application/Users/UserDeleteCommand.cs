@@ -1,10 +1,11 @@
 ﻿using GenericRepository;
+using RentACarServer.Application.Behaviors;
 using RentACarServer.Domain.Users;
 using TS.MediatR;
 using TS.Result;
 
 namespace RentACarServer.Application.Users;
-
+[Permission("user:delete")]
 public record UserDeleteCommand(
     Guid Id) : IRequest<Result<string>>;
 
@@ -17,6 +18,9 @@ internal sealed class UserDeleteCommandHandler(
         var user = await userRepository.FirstOrDefaultAsync(i => i.Id == request.Id, cancellationToken);
         if (user is null)
             return Result<string>.Failure("Kullanıcı bulunamadı");
+
+        if (user.UserName.Value == "admin")
+            return Result<string>.Failure("Admin kullanıcısı silinemez");
 
         user.Delete();
         userRepository.Update(user);

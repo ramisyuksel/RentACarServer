@@ -1,11 +1,13 @@
-﻿using RentACarServer.Domain.Branches;
+﻿using Microsoft.EntityFrameworkCore;
+using RentACarServer.Application.Behaviors;
+using RentACarServer.Domain.Branches;
 using RentACarServer.Domain.Roles;
 using RentACarServer.Domain.Users;
 using TS.MediatR;
 using TS.Result;
 
 namespace RentACarServer.Application.Users;
-
+[Permission("user:view")]
 public sealed record UserGetQuery(
     Guid Id) : IRequest<Result<UserDto>>;
 
