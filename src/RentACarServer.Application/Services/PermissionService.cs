@@ -8,6 +8,9 @@ public sealed class PermissionService
     public List<string> GetAll()
     {
         var permissions = new HashSet<string>();
+        
+        // added for testing without attribute
+        permissions.Add("dashboard:view");
 
         var assembly = Assembly.GetExecutingAssembly();
 

@@ -1,10 +1,11 @@
 ﻿using GenericRepository;
+using RentACarServer.Application.Behaviors;
 using RentACarServer.Domain.Roles;
 using TS.MediatR;
 using TS.Result;
 
 namespace RentACarServer.Application.Roles;
-
+[Permission("role:update_permissions")]
 public sealed record RoleUpdatePermissionCommand(Guid RoleId, List<string> Permissions) : IRequest<Result<string>>;
 
 internal sealed class RoleUpdatePermissionCommandHandler(IRoleRepository roleRepository, IUnitOfWork unitOfWork) : IRequestHandler<RoleUpdatePermissionCommand, Result<string>>
