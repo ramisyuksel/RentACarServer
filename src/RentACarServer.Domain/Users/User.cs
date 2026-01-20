@@ -1,6 +1,5 @@
 ﻿using RentACarServer.Domain.Abstractions;
 using RentACarServer.Domain.Users.ValueObjects;
-using static System.Runtime.CompilerServices.RuntimeHelpers;
 
 namespace RentACarServer.Domain.Users;
 

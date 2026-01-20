@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.OData.Edm;
 using Microsoft.OData.ModelBuilder;
 using RentACarServer.Application.Branches;
 using RentACarServer.Application.Roles;
+using RentACarServer.Application.Users;
 using TS.MediatR;
 
 namespace RentACarServer.WebAPI.Controllers
@@ -31,5 +31,9 @@ namespace RentACarServer.WebAPI.Controllers
         [HttpGet("roles")]
         public IQueryable<RoleDto> Roles(ISender sender, CancellationToken cancellationToken = default)
             => sender.Send(new RoleGetAllQuery(), cancellationToken).Result;
+
+        [HttpGet("users")]
+        public IQueryable<UserDto> Users(ISender sender, CancellationToken cancellationToken = default)
+            => sender.Send(new UserGetAllQuery(), cancellationToken).Result;
     }
 }

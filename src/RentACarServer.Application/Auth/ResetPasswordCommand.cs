@@ -1,7 +1,6 @@
 ﻿using FluentValidation;
 using GenericRepository;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using RentACarServer.Domain.LoginTokens;
 using RentACarServer.Domain.Users;
 using RentACarServer.Domain.Users.ValueObjects;

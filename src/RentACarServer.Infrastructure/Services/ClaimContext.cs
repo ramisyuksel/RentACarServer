@@ -4,8 +4,8 @@ using RentACarServer.Application.Services;
 
 namespace RentACarServer.Infrastructure.Services;
 
-internal sealed class UserContext(
-    IHttpContextAccessor httpContextAccessor) : IUserContext
+internal sealed class ClaimContext(
+    IHttpContextAccessor httpContextAccessor) : IClaimContext
 {
     public Guid GetUserId()
     {
@@ -27,6 +27,30 @@ internal sealed class UserContext(
         catch (Exception)
         {
             throw new ArgumentException("Kullanıcı id uygun guid formatında değil");
+        }
+    }
+
+    public Guid GetBranchId()
+    {
+        var httpContext = httpContextAccessor.HttpContext;
+        if (httpContext is null)
+            throw new ArgumentNullException("HttpContext bulunamadı");
+
+        var claims = httpContext.User.Claims;
+        string? branchId = claims.FirstOrDefault(i => i.Type == "branchId")?.Value;
+        
+        if (branchId is null)
+        {
+            throw new ArgumentNullException("Şube bilgisi bulunamadı");
+        }
+        try
+        {
+            Guid id = Guid.Parse(branchId);
+            return id;
+        }
+        catch (Exception)
+        {
+            throw new ArgumentException("Şube id uygun Guid formatında değil");
         }
     }
 }

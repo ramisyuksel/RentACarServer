@@ -1,5 +1,4 @@
-﻿using GenericRepository;
-using RentACarServer.Domain.Abstractions;
+﻿using RentACarServer.Domain.Abstractions;
 
 namespace RentACarServer.Domain.Branches;
 

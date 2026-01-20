@@ -6,7 +6,6 @@ using RentACarServer.Domain.Roles;
 using RentACarServer.Domain.Shared;
 using RentACarServer.Domain.Users;
 using RentACarServer.Domain.Users.ValueObjects;
-using RentACarServer.Infrastructure.Repositories;
 
 namespace RentACarServer.WebAPI;
 

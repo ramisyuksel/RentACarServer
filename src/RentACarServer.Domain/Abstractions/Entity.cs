@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
-using RentACarServer.Domain.Users;
-
-namespace RentACarServer.Domain.Abstractions;
+﻿namespace RentACarServer.Domain.Abstractions;
 
 public abstract class Entity
 {
