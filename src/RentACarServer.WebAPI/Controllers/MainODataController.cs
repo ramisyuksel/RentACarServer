@@ -7,6 +7,7 @@ using RentACarServer.Application.Branches;
 using RentACarServer.Application.Roles;
 using RentACarServer.Application.Users;
 using RentACarServer.Application.Categories;
+using RentACarServer.Application.ProtectionPackages;
 using TS.MediatR;
 
 namespace RentACarServer.WebAPI.Controllers
@@ -24,6 +25,7 @@ namespace RentACarServer.WebAPI.Controllers
             builder.EntitySet<RoleDto>("roles");
             builder.EntitySet<UserDto>("users");
             builder.EntitySet<CategoryDto>("categories");
+            builder.EntitySet<ProtectionPackageDto>("protection-packages");
             return builder.GetEdmModel();
         }
 
@@ -42,5 +44,9 @@ namespace RentACarServer.WebAPI.Controllers
         [HttpGet("categories")]
         public IQueryable<CategoryDto> Categories(ISender sender, CancellationToken cancellationToken = default)
             => sender.Send(new CategoryGetAllQuery(), cancellationToken).Result;
+
+        [HttpGet("protection-packages")]
+        public IQueryable<ProtectionPackageDto> ProtectionPackages(ISender sender, CancellationToken cancellationToken = default)
+            => sender.Send(new ProtectionPackageGetAllQuery(), cancellationToken).Result;
     }
 }
