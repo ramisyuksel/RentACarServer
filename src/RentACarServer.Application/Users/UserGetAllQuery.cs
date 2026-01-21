@@ -1,4 +1,5 @@
 ﻿using RentACarServer.Application.Behaviors;
+using RentACarServer.Application.Services;
 using RentACarServer.Domain.Branches;
 using RentACarServer.Domain.Roles;
 using RentACarServer.Domain.Users;
@@ -11,12 +12,20 @@ public sealed record UserGetAllQuery : IRequest<IQueryable<UserDto>>;
 internal sealed class UserGetAllQueryHandler(
     IUserRepository userRepository,
     IRoleRepository roleRepository,
+    IClaimContext claimContext,
     IBranchRepository branchRepository) : IRequestHandler<UserGetAllQuery, IQueryable<UserDto>>
 {
     public Task<IQueryable<UserDto>> Handle(UserGetAllQuery request, CancellationToken cancellationToken)
-        => Task.FromResult(
-            userRepository
-                .GetAllWithAudit()
-                .MapTo(roleRepository
-                    .GetAll(), branchRepository.GetAll()));
+    {
+        var res = userRepository
+            .GetAllWithAudit()
+            .MapTo(roleRepository
+                .GetAll(), branchRepository.GetAll());
+
+        if (claimContext.GetRoleName() != "sys_admin")
+            res = res.Where(i => i.BranchId == claimContext.GetBranchId());
+
+        return Task.FromResult(res);
+
+    }
 }

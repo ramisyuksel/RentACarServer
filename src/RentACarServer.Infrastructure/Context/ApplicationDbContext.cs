@@ -7,6 +7,7 @@ using RentACarServer.Domain.LoginTokens;
 using RentACarServer.Domain.Users;
 using System.Security.Claims;
 using RentACarServer.Domain.Branches;
+using RentACarServer.Domain.Categories;
 using RentACarServer.Domain.Roles;
 
 namespace RentACarServer.Infrastructure.Context;
@@ -18,6 +19,7 @@ public sealed class ApplicationDbContext(DbContextOptions options) : DbContext(o
     public DbSet<LoginToken> LoginTokens { get; set; }
     public DbSet<Branch> Branches { get; set; }
     public DbSet<Role> Roles { get; set; }
+    public DbSet<Category> Categories { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

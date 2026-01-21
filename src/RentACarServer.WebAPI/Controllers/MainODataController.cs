@@ -6,6 +6,7 @@ using Microsoft.OData.ModelBuilder;
 using RentACarServer.Application.Branches;
 using RentACarServer.Application.Roles;
 using RentACarServer.Application.Users;
+using RentACarServer.Application.Categories;
 using TS.MediatR;
 
 namespace RentACarServer.WebAPI.Controllers
@@ -22,6 +23,7 @@ namespace RentACarServer.WebAPI.Controllers
             builder.EntitySet<BranchDto>("branches");
             builder.EntitySet<RoleDto>("roles");
             builder.EntitySet<UserDto>("users");
+            builder.EntitySet<CategoryDto>("categories");
             return builder.GetEdmModel();
         }
 
@@ -36,5 +38,9 @@ namespace RentACarServer.WebAPI.Controllers
         [HttpGet("users")]
         public IQueryable<UserDto> Users(ISender sender, CancellationToken cancellationToken = default)
             => sender.Send(new UserGetAllQuery(), cancellationToken).Result;
+
+        [HttpGet("categories")]
+        public IQueryable<CategoryDto> Categories(ISender sender, CancellationToken cancellationToken = default)
+            => sender.Send(new CategoryGetAllQuery(), cancellationToken).Result;
     }
 }
