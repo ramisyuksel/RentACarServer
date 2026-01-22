@@ -3,14 +3,15 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RentACarServer.Domain.Abstractions;
-using RentACarServer.Domain.LoginTokens;
-using RentACarServer.Domain.Users;
-using System.Security.Claims;
 using RentACarServer.Domain.Branches;
 using RentACarServer.Domain.Categories;
+using RentACarServer.Domain.LoginTokens;
 using RentACarServer.Domain.ProtectionPackage;
 using RentACarServer.Domain.RentalExtras;
 using RentACarServer.Domain.Roles;
+using RentACarServer.Domain.Users;
+using RentACarServer.Domain.Vehicles;
+using System.Security.Claims;
 
 namespace RentACarServer.Infrastructure.Context;
 
@@ -24,6 +25,7 @@ public sealed class ApplicationDbContext(DbContextOptions options) : DbContext(o
     public DbSet<Category> Categories { get; set; }
     public DbSet<ProtectionPackage> ProtectionPackages { get; set; }
     public DbSet<RentalExtra> RentalExtras { get; set; }
+    public DbSet<Vehicle> Vehicles { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
