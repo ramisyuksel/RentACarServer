@@ -9,6 +9,7 @@ using System.Security.Claims;
 using RentACarServer.Domain.Branches;
 using RentACarServer.Domain.Categories;
 using RentACarServer.Domain.ProtectionPackage;
+using RentACarServer.Domain.RentalExtras;
 using RentACarServer.Domain.Roles;
 
 namespace RentACarServer.Infrastructure.Context;
@@ -22,6 +23,7 @@ public sealed class ApplicationDbContext(DbContextOptions options) : DbContext(o
     public DbSet<Role> Roles { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<ProtectionPackage> ProtectionPackages { get; set; }
+    public DbSet<RentalExtra> RentalExtras { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -97,7 +99,5 @@ public sealed class ApplicationDbContext(DbContextOptions options) : DbContext(o
     }
 }
 
-internal sealed class IdentityIdValueConverter : ValueConverter<IdentityId, Guid>
-{
-    public IdentityIdValueConverter() : base(m => m.Value, m => new IdentityId(m)) { }
-}
+internal sealed class IdentityIdValueConverter()
+    : ValueConverter<IdentityId, Guid>(m => m.Value, m => new IdentityId(m));

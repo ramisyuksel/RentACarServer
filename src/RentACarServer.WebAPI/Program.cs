@@ -99,6 +99,7 @@ app.MapPermission();
 app.MapUser();
 app.MapCategory();
 app.MapProtectionPackage();
+app.MapRentalExtra();
 
 app.MapGet("/", () => Results.Ok("Hello World")).RequireAuthorization();
 

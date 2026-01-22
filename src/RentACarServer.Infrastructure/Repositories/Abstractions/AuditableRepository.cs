@@ -5,16 +5,12 @@ using RentACarServer.Domain.Users;
 
 namespace RentACarServer.Infrastructure.Repositories.Abstractions;
 
-public class AuditableRepository<TEntity, TContext> : Repository<TEntity, TContext>, IAuditableRepository<TEntity>
+public class AuditableRepository<TEntity, TContext>(TContext context)
+    : Repository<TEntity, TContext>(context), IAuditableRepository<TEntity>
     where TEntity : Entity
     where TContext : DbContext
 {
-    private readonly TContext _context;
-
-    public AuditableRepository(TContext context) : base(context)
-    {
-        _context = context;
-    }
+    private readonly TContext _context = context;
 
     public IQueryable<EntityWithAuditDto<TEntity>> GetAllWithAudit()
     {

@@ -4,9 +4,5 @@ using RentACarServer.Infrastructure.Repositories.Abstractions;
 
 namespace RentACarServer.Infrastructure.Repositories;
 
-public class CategoryRepository : AuditableRepository<Category, ApplicationDbContext>, ICategoryRepository
-{
-    public CategoryRepository(ApplicationDbContext context) : base(context)
-    {
-    }
-}
+public class CategoryRepository(ApplicationDbContext context)
+    : AuditableRepository<Category, ApplicationDbContext>(context), ICategoryRepository;

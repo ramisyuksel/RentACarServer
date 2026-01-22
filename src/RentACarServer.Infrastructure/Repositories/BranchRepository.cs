@@ -4,9 +4,5 @@ using RentACarServer.Infrastructure.Repositories.Abstractions;
 
 namespace RentACarServer.Infrastructure.Repositories;
 
-internal sealed class BranchRepository : AuditableRepository<Branch, ApplicationDbContext>, IBranchRepository
-{
-    public BranchRepository(ApplicationDbContext context) : base(context)
-    {
-    }
-}
+internal sealed class BranchRepository(ApplicationDbContext context)
+    : AuditableRepository<Branch, ApplicationDbContext>(context), IBranchRepository;
