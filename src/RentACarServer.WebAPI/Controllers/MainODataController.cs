@@ -4,11 +4,12 @@ using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.OData.Edm;
 using Microsoft.OData.ModelBuilder;
 using RentACarServer.Application.Branches;
-using RentACarServer.Application.Roles;
-using RentACarServer.Application.Users;
 using RentACarServer.Application.Categories;
 using RentACarServer.Application.ProtectionPackages;
 using RentACarServer.Application.RentalExtras;
+using RentACarServer.Application.Roles;
+using RentACarServer.Application.Users;
+using RentACarServer.Application.Vehicles;
 using TS.MediatR;
 
 namespace RentACarServer.WebAPI.Controllers
@@ -28,6 +29,7 @@ namespace RentACarServer.WebAPI.Controllers
             builder.EntitySet<CategoryDto>("categories");
             builder.EntitySet<ProtectionPackageDto>("protection-packages");
             builder.EntitySet<RentalExtraDto>("rental-extras");
+            builder.EntitySet<VehicleDto>("vehicles");
             return builder.GetEdmModel();
         }
 
@@ -54,5 +56,9 @@ namespace RentACarServer.WebAPI.Controllers
         [HttpGet("rental-extras")]
         public IQueryable<RentalExtraDto> RentalExtras(ISender sender, CancellationToken cancellationToken = default)
             => sender.Send(new RentalExtraGetAllQuery(), cancellationToken).Result;
+
+        [HttpGet("vehicles")]
+        public IQueryable<VehicleDto> Vehicles(ISender sender, CancellationToken cancellationToken = default)
+            => sender.Send(new VehicleGetAllQuery(), cancellationToken).Result;
     }
 }

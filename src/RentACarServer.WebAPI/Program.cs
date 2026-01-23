@@ -103,6 +103,7 @@ app.MapUser();
 app.MapCategory();
 app.MapProtectionPackage();
 app.MapRentalExtra();
+app.MapVehicle();
 
 app.MapGet("/", () => Results.Ok("Hello World")).RequireAuthorization();
 

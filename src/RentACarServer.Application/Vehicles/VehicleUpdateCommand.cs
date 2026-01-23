@@ -1,7 +1,8 @@
-﻿using FluentValidation;
+using FluentValidation;
 using GenericFileService.Files;
 using GenericRepository;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using RentACarServer.Application.Behaviors;
 using RentACarServer.Domain.Abstractions;
 using RentACarServer.Domain.Shared;
@@ -12,8 +13,9 @@ using TS.Result;
 
 namespace RentACarServer.Application.Vehicles;
 
-[Permission("vehicle:create")]
-public sealed record VehicleCreateCommand(
+[Permission("vehicle:update")]
+public sealed record VehicleUpdateCommand(
+    Guid Id,
     string Brand,
     string Model,
     int ModelYear,
@@ -45,32 +47,48 @@ public sealed record VehicleCreateCommand(
     string TireStatus,
     string GeneralStatus,
     List<string> Features,
-    IFormFile File,
     bool IsActive
-) : IRequest<Result<string>>;
-
-public sealed class VehicleCreateCommandValidator : AbstractValidator<VehicleCreateCommand>
+) : IRequest<Result<string>>
 {
-    public VehicleCreateCommandValidator()
+    [FromForm]
+    public IFormFile? File { get; set; }
+}
+
+public sealed class VehicleUpdateCommandValidator : AbstractValidator<VehicleUpdateCommand>
+{
+    public VehicleUpdateCommandValidator()
     {
         RuleFor(p => p.Brand).NotEmpty().WithMessage("Brand is required.");
         RuleFor(p => p.Model).NotEmpty().WithMessage("Model is required.");
         RuleFor(p => p.ModelYear).GreaterThan(1900).WithMessage("Model year must be greater than 1900.");
         RuleFor(p => p.Plate).NotEmpty().WithMessage("Plate is required.");
-        RuleFor(p => p.File).NotEmpty().WithMessage("File is required.");
+        RuleFor(p => p.Features).Must(i => i != null && i.Any()).WithMessage("Select at least one ");
     }
 }
 
-internal sealed class VehicleCreateCommandHandler(
+internal sealed class VehicleUpdateCommandHandler(
     IVehicleRepository vehicleRepository,
-    IUnitOfWork unitOfWork) : IRequestHandler<VehicleCreateCommand, Result<string>>
+    IUnitOfWork unitOfWork) : IRequestHandler<VehicleUpdateCommand, Result<string>>
 {
-    public async Task<Result<string>> Handle(VehicleCreateCommand request, CancellationToken cancellationToken)
+    public async Task<Result<string>> Handle(VehicleUpdateCommand request, CancellationToken cancellationToken)
     {
-        if (await vehicleRepository.AnyAsync(p => p.Plate.Value == request.Plate, cancellationToken))
-            return Result<string>.Failure("Another vehicle with this plate already exists.");
+        Vehicle? vehicle = await vehicleRepository.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+        if (vehicle is null)
+            return Result<string>.Failure("Vehicle not found.");
 
-        string fileName = FileService.FileSaveToServer(request.File, "wwwroot/images/");
+        if (!string.Equals(vehicle.Plate.Value, request.Plate, StringComparison.OrdinalIgnoreCase))
+        {
+            bool plateExists = await vehicleRepository.AnyAsync(
+                p => p.Plate.Value == request.Plate && p.Id != request.Id, cancellationToken);
+            if (plateExists)
+                return Result<string>.Failure("Another vehicle with this plate already exists.");
+        }
+
+        string fileName = vehicle.ImageUrl.Value;
+        if (request.File is not null && request.File.Length > 0)
+        {
+            fileName = FileService.FileSaveToServer(request.File, "wwwroot/images/");
+        }
 
         Brand brand = new(request.Brand);
         Model model = new(request.Model);
@@ -105,45 +123,46 @@ internal sealed class VehicleCreateCommandHandler(
         GeneralStatus generalStatus = new(request.GeneralStatus);
         IEnumerable<Feature> features = request.Features.Select(f => new Feature(f));
 
-        Vehicle vehicle = new Vehicle(
-            brand,
-            model,
-            modelYear,
-            color,
-            plate,
-            categoryId,
-            branchId,
-            vinNumber,
-            engineNumber,
-            description,
-            imageUrl,
-            fuelType,
-            transmission,
-            engineVolume,
-            enginePower,
-            tractionType,
-            fuelConsumption,
-            seatCount,
-            kilometer,
-            dailyPrice,
-            weeklyDiscountRate,
-            monthlyDiscountRate,
-            insuranceType,
-            lastMaintenanceDate,
-            lastMaintenanceKm,
-            nextMaintenanceKm,
-            inspectionDate,
-            insuranceEndDate,
-            cascoEndDate,
-            tireStatus,
-            generalStatus,
-            features,
-            request.IsActive
-        );
+        vehicle.SetBrand(brand);
+        vehicle.SetModel(model);
+        vehicle.SetModelYear(modelYear);
+        vehicle.SetColor(color);
+        vehicle.SetPlate(plate);
+        vehicle.SetCategoryId(categoryId);
+        vehicle.SetBranchId(branchId);
+        vehicle.SetVinNumber(vinNumber);
+        vehicle.SetEngineNumber(engineNumber);
+        vehicle.SetDescription(description);
+        vehicle.SetImageUrl(imageUrl);
+        vehicle.SetFuelType(fuelType);
+        vehicle.SetTransmission(transmission);
+        vehicle.SetEngineVolume(engineVolume);
+        vehicle.SetEnginePower(enginePower);
+        vehicle.SetTractionType(tractionType);
+        vehicle.SetFuelConsumption(fuelConsumption);
+        vehicle.SetSeatCount(seatCount);
+        vehicle.SetKilometer(kilometer);
+        vehicle.SetDailyPrice(dailyPrice);
+        vehicle.SetWeeklyDiscountRate(weeklyDiscountRate);
+        vehicle.SetMonthlyDiscountRate(monthlyDiscountRate);
+        vehicle.SetInsuranceType(insuranceType);
+        vehicle.SetLastMaintenanceDate(lastMaintenanceDate);
+        vehicle.SetLastMaintenanceKm(lastMaintenanceKm);
+        vehicle.SetNextMaintenanceKm(nextMaintenanceKm);
+        vehicle.SetInspectionDate(inspectionDate);
+        vehicle.SetInsuranceEndDate(insuranceEndDate);
+        if (cascoEndDate is not null)
+        {
+            vehicle.SetCascoEndDate(cascoEndDate);
+        }
+        vehicle.SetTireStatus(tireStatus);
+        vehicle.SetGeneralStatus(generalStatus);
+        vehicle.SetFeatures(features);
+        vehicle.SetStatus(request.IsActive);
 
-        vehicleRepository.Add(vehicle);
+        vehicleRepository.Update(vehicle);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return "Vehicle created successfully";
+        return "Vehicle updated successfully";
     }
 }

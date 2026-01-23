@@ -45,7 +45,7 @@ namespace RentACarServer.Domain.Vehicles
             NextMaintenanceKm nextMaintenanceKm,
             InspectionDate inspectionDate,
             InsuranceEndDate insuranceEndDate,
-            CascoEndDate cascoEndDate,
+            CascoEndDate? cascoEndDate,
             TireStatus tireStatus,
             GeneralStatus generalStatus,
             IEnumerable<Feature> features,
@@ -79,10 +79,11 @@ namespace RentACarServer.Domain.Vehicles
             SetNextMaintenanceKm(nextMaintenanceKm);
             SetInspectionDate(inspectionDate);
             SetInsuranceEndDate(insuranceEndDate);
-            SetCascoEndDate(cascoEndDate);
+            if (cascoEndDate is not null)
+                SetCascoEndDate(cascoEndDate);
             SetTireStatus(tireStatus);
             SetGeneralStatus(generalStatus);
-            SetFeatures(features ?? Enumerable.Empty<Feature>());
+            SetFeatures(features);
             SetStatus(isActive);
         }
 
