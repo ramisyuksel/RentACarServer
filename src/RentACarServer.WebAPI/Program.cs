@@ -104,6 +104,7 @@ app.MapCategory();
 app.MapProtectionPackage();
 app.MapRentalExtra();
 app.MapVehicle();
+app.MapSeedData();
 
 app.MapGet("/", () => Results.Ok("Hello World")).RequireAuthorization();
 
