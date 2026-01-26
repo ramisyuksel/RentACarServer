@@ -3,6 +3,7 @@ using GenericRepository;
 using RentACarServer.Application.Behaviors;
 using RentACarServer.Application.Services;
 using RentACarServer.Domain.Abstractions;
+using RentACarServer.Domain.Shared;
 using RentACarServer.Domain.Users;
 using RentACarServer.Domain.Users.ValueObjects;
 using TS.MediatR;
