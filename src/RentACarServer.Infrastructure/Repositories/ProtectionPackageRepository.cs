@@ -4,5 +4,5 @@ using RentACarServer.Infrastructure.Repositories.Abstractions;
 
 namespace RentACarServer.Infrastructure.Repositories;
 
-public class ProtectionPackageRepository(ApplicationDbContext context)
+internal sealed class ProtectionPackageRepository(ApplicationDbContext context)
     : AuditableRepository<ProtectionPackage, ApplicationDbContext>(context), IProtectionPackageRepository;

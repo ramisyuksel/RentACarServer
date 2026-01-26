@@ -57,7 +57,7 @@ builder.Services.AddControllers()
     });
 
 builder.Services.AddCors();
-builder.Services.AddOpenApi("v1", options => { options.AddDocumentTransformer<BearerSecuritySchemeTransformer>(); }); 
+builder.Services.AddOpenApi("v1", options => { options.AddDocumentTransformer<BearerSecuritySchemeTransformer>(); });
 builder.Services.AddExceptionHandler<ExceptionHandler>().AddProblemDetails();
 builder.Services.AddResponseCompression(opt =>
 {
@@ -104,7 +104,8 @@ app.MapCategory();
 app.MapProtectionPackage();
 app.MapRentalExtra();
 app.MapVehicle();
-app.MapSeedData();
+//app.MapSeedData();
+app.MapCustomer();
 
 app.MapGet("/", () => Results.Ok("Hello World")).RequireAuthorization();
 

@@ -4,6 +4,4 @@ using RentACarServer.Infrastructure.Repositories.Abstractions;
 
 namespace RentACarServer.Infrastructure.Repositories;
 
-internal sealed class UserRepository(ApplicationDbContext context) : AuditableRepository<User, ApplicationDbContext>(context), IUserRepository
-{
-}
+internal sealed class UserRepository(ApplicationDbContext context) : AuditableRepository<User, ApplicationDbContext>(context), IUserRepository;

@@ -12,6 +12,8 @@ using RentACarServer.Domain.Roles;
 using RentACarServer.Domain.Users;
 using RentACarServer.Domain.Vehicles;
 using System.Security.Claims;
+using RentACarServer.Domain.Customers;
+using RentACarServer.Domain.Reservations;
 
 namespace RentACarServer.Infrastructure.Context;
 
@@ -26,6 +28,8 @@ public sealed class ApplicationDbContext(DbContextOptions options) : DbContext(o
     public DbSet<ProtectionPackage> ProtectionPackages { get; set; }
     public DbSet<RentalExtra> RentalExtras { get; set; }
     public DbSet<Vehicle> Vehicles { get; set; }
+    public DbSet<Customer> Customers { get; set; }
+    public DbSet<Reservation> Reservations { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -39,6 +43,7 @@ public sealed class ApplicationDbContext(DbContextOptions options) : DbContext(o
         configurationBuilder.Properties<IdentityId>().HaveConversion<IdentityIdValueConverter>();
         configurationBuilder.Properties<decimal>().HaveColumnType("decimal(18,2)");
         configurationBuilder.Properties<string>().HaveColumnType("nvarchar(MAX)");
+        configurationBuilder.Properties<TimeOnly>().HaveColumnType("time(7)");
         base.ConfigureConventions(configurationBuilder);
     }
 
