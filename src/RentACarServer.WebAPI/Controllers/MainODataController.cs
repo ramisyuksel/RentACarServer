@@ -16,63 +16,62 @@ using TS.MediatR;
 using CustomerDto = RentACarServer.Application.Customers.CustomerDto;
 using VehicleDto = RentACarServer.Application.Vehicles.VehicleDto;
 
-namespace RentACarServer.WebAPI.Controllers
+namespace RentACarServer.WebAPI.Controllers;
+
+[Route("odata")]
+[ApiController]
+[EnableQuery]
+public class MainODataController : ODataController
 {
-    [Route("odata")]
-    [ApiController]
-    [EnableQuery]
-    public class MainODataController : ODataController
+    public static IEdmModel GetEdmModel()
     {
-        public static IEdmModel GetEdmModel()
-        {
-            ODataConventionModelBuilder builder = new();
-            builder.EnableLowerCamelCase();
-            builder.EntitySet<BranchDto>("branches");
-            builder.EntitySet<RoleDto>("roles");
-            builder.EntitySet<UserDto>("users");
-            builder.EntitySet<CategoryDto>("categories");
-            builder.EntitySet<ProtectionPackageDto>("protection-packages");
-            builder.EntitySet<RentalExtraDto>("rental-extras");
-            builder.EntitySet<VehicleDto>("vehicles");
-            builder.EntitySet<CustomerDto>("customers");
-            builder.EntitySet<ReservationDto>("reservations");
-            return builder.GetEdmModel();
-        }
-
-        [HttpGet("branches")]
-        public IQueryable<BranchDto> Branches(ISender sender, CancellationToken cancellationToken = default)
-            => sender.Send(new BranchGetAllQuery(), cancellationToken).Result;
-
-        [HttpGet("roles")]
-        public IQueryable<RoleDto> Roles(ISender sender, CancellationToken cancellationToken = default)
-            => sender.Send(new RoleGetAllQuery(), cancellationToken).Result;
-
-        [HttpGet("users")]
-        public IQueryable<UserDto> Users(ISender sender, CancellationToken cancellationToken = default)
-            => sender.Send(new UserGetAllQuery(), cancellationToken).Result;
-
-        [HttpGet("categories")]
-        public IQueryable<CategoryDto> Categories(ISender sender, CancellationToken cancellationToken = default)
-            => sender.Send(new CategoryGetAllQuery(), cancellationToken).Result;
-
-        [HttpGet("protection-packages")]
-        public IQueryable<ProtectionPackageDto> ProtectionPackages(ISender sender, CancellationToken cancellationToken = default)
-            => sender.Send(new ProtectionPackageGetAllQuery(), cancellationToken).Result;
-
-        [HttpGet("rental-extras")]
-        public IQueryable<RentalExtraDto> RentalExtras(ISender sender, CancellationToken cancellationToken = default)
-            => sender.Send(new RentalExtraGetAllQuery(), cancellationToken).Result;
-
-        [HttpGet("vehicles")]
-        public IQueryable<VehicleDto> Vehicles(ISender sender, CancellationToken cancellationToken = default)
-            => sender.Send(new VehicleGetAllQuery(), cancellationToken).Result;
-
-        [HttpGet("customers")]
-        public IQueryable<CustomerDto> Customers(ISender sender, CancellationToken cancellationToken = default)
-            => sender.Send(new CustomerGetAllQuery(), cancellationToken).Result;
-
-        [HttpGet("reservations")]
-        public IQueryable<ReservationDto> Reservations(ISender sender, CancellationToken cancellationToken = default)
-            => sender.Send(new ReservationGetAllQuery(), cancellationToken).Result;
+        ODataConventionModelBuilder builder = new();
+        builder.EnableLowerCamelCase();
+        builder.EntitySet<BranchDto>("branches");
+        builder.EntitySet<RoleDto>("roles");
+        builder.EntitySet<UserDto>("users");
+        builder.EntitySet<CategoryDto>("categories");
+        builder.EntitySet<ProtectionPackageDto>("protection-packages");
+        builder.EntitySet<RentalExtraDto>("rental-extras");
+        builder.EntitySet<VehicleDto>("vehicles");
+        builder.EntitySet<CustomerDto>("customers");
+        builder.EntitySet<ReservationDto>("reservations");
+        return builder.GetEdmModel();
     }
+
+    [HttpGet("branches")]
+    public IQueryable<BranchDto> Branches(ISender sender, CancellationToken cancellationToken = default)
+        => sender.Send(new BranchGetAllQuery(), cancellationToken).Result;
+
+    [HttpGet("roles")]
+    public IQueryable<RoleDto> Roles(ISender sender, CancellationToken cancellationToken = default)
+        => sender.Send(new RoleGetAllQuery(), cancellationToken).Result;
+
+    [HttpGet("users")]
+    public IQueryable<UserDto> Users(ISender sender, CancellationToken cancellationToken = default)
+        => sender.Send(new UserGetAllQuery(), cancellationToken).Result;
+
+    [HttpGet("categories")]
+    public IQueryable<CategoryDto> Categories(ISender sender, CancellationToken cancellationToken = default)
+        => sender.Send(new CategoryGetAllQuery(), cancellationToken).Result;
+
+    [HttpGet("protection-packages")]
+    public IQueryable<ProtectionPackageDto> ProtectionPackages(ISender sender, CancellationToken cancellationToken = default)
+        => sender.Send(new ProtectionPackageGetAllQuery(), cancellationToken).Result;
+
+    [HttpGet("rental-extras")]
+    public IQueryable<RentalExtraDto> RentalExtras(ISender sender, CancellationToken cancellationToken = default)
+        => sender.Send(new RentalExtraGetAllQuery(), cancellationToken).Result;
+
+    [HttpGet("vehicles")]
+    public IQueryable<VehicleDto> Vehicles(ISender sender, CancellationToken cancellationToken = default)
+        => sender.Send(new VehicleGetAllQuery(), cancellationToken).Result;
+
+    [HttpGet("customers")]
+    public IQueryable<CustomerDto> Customers(ISender sender, CancellationToken cancellationToken = default)
+        => sender.Send(new CustomerGetAllQuery(), cancellationToken).Result;
+
+    [HttpGet("reservations")]
+    public IQueryable<ReservationDto> Reservations(ISender sender, CancellationToken cancellationToken = default)
+        => sender.Send(new ReservationGetAllQuery(), cancellationToken).Result;
 }

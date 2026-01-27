@@ -1,11 +1,12 @@
 ﻿using GenericRepository;
+using RentACarServer.Application.Behaviors;
 using RentACarServer.Domain.Reservations;
 using RentACarServer.Domain.Reservations.ValueObjects;
 using TS.MediatR;
 using TS.Result;
 
 namespace RentACarServer.Application.Reservations;
-
+[Permission("reservation:delete")]
 public sealed record ReservationDeleteCommand(
     Guid Id) : IRequest<Result<string>>;
 

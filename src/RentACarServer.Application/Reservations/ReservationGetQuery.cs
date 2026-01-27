@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using RentACarServer.Application.Behaviors;
 using RentACarServer.Domain.Branches;
 using RentACarServer.Domain.Categories;
 using RentACarServer.Domain.Customers;
@@ -11,13 +12,14 @@ using TS.Result;
 
 namespace RentACarServer.Application.Reservations;
 
+[Permission("reservation:view")]
 public sealed record ReservationGetQuery(
     Guid Id) : IRequest<Result<ReservationDto>>;
 
 internal sealed class ReservationGetQueryHandler(
     IReservationRepository reservationRepository,
     ICustomerRepository customerRepository,
-    IBranchRepository branchRepository,
+    IBranchRepository brancheRepository,
     IVehicleRepository vehicleRepository,
     ICategoryRepository categoryRepository,
     IProtectionPackageRepository protectionPackageRepository,
@@ -28,7 +30,7 @@ internal sealed class ReservationGetQueryHandler(
     {
         var res = await reservationRepository.GetAllWithAudit().MapTo(
                 customerRepository.GetAll(),
-                branchRepository.GetAll(),
+                brancheRepository.GetAll(),
                 vehicleRepository.GetAll(),
                 categoryRepository.GetAll(),
                 protectionPackageRepository.GetAll(),

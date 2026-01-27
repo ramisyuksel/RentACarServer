@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RentACarServer.Infrastructure.Context;
 
@@ -11,9 +12,11 @@ using RentACarServer.Infrastructure.Context;
 namespace RentACarServer.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260126091803_ReservationTableUpdated")]
+    partial class ReservationTableUpdated
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -853,38 +856,6 @@ namespace RentACarServer.Infrastructure.Migrations
 
             modelBuilder.Entity("RentACarServer.Domain.Reservations.Reservation", b =>
                 {
-                    b.OwnsOne("RentACarServer.Domain.Reservations.DeliveryDatetime", "DeliveryDatetime", b1 =>
-                        {
-                            b1.Property<Guid>("ReservationId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<DateTimeOffset>("Value")
-                                .HasColumnType("datetimeoffset");
-
-                            b1.HasKey("ReservationId");
-
-                            b1.ToTable("Reservations");
-
-                            b1.WithOwner()
-                                .HasForeignKey("ReservationId");
-                        });
-
-                    b.OwnsOne("RentACarServer.Domain.Reservations.PickUpDatetime", "PickUpDatetime", b1 =>
-                        {
-                            b1.Property<Guid>("ReservationId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<DateTimeOffset>("Value")
-                                .HasColumnType("datetimeoffset");
-
-                            b1.HasKey("ReservationId");
-
-                            b1.ToTable("Reservations");
-
-                            b1.WithOwner()
-                                .HasForeignKey("ReservationId");
-                        });
-
                     b.OwnsOne("RentACarServer.Domain.Shared.Price", "ProtectionPackagePrice", b1 =>
                         {
                             b1.Property<Guid>("ReservationId")
@@ -1096,9 +1067,6 @@ namespace RentACarServer.Infrastructure.Migrations
                     b.Navigation("DeliveryDate")
                         .IsRequired();
 
-                    b.Navigation("DeliveryDatetime")
-                        .IsRequired();
-
                     b.Navigation("DeliveryTime")
                         .IsRequired();
 
@@ -1109,9 +1077,6 @@ namespace RentACarServer.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("PickUpDate")
-                        .IsRequired();
-
-                    b.Navigation("PickUpDatetime")
                         .IsRequired();
 
                     b.Navigation("PickUpTime")

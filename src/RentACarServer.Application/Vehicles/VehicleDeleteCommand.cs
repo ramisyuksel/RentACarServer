@@ -1,7 +1,6 @@
 using FluentValidation;
 using GenericRepository;
 using RentACarServer.Application.Behaviors;
-using RentACarServer.Domain.Abstractions;
 using RentACarServer.Domain.Vehicles;
 using TS.MediatR;
 using TS.Result;

@@ -1,4 +1,3 @@
-using GenericRepository;
 using RentACarServer.Domain.Abstractions;
 using RentACarServer.Domain.Categories;
 
