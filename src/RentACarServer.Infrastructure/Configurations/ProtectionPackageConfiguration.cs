@@ -13,7 +13,7 @@ internal sealed class ProtectionPackageConfiguration : IEntityTypeConfiguration<
         builder.OwnsOne(p => p.Name);
         builder.OwnsOne(p => p.Price);
         builder.OwnsOne(p => p.IsRecommended);
-
         builder.OwnsMany(p => p.Coverages);
+        builder.OwnsOne(x => x.OrderNumber);
     }
 }

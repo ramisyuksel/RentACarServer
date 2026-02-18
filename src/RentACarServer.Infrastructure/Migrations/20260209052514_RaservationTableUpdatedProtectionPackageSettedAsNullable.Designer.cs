@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RentACarServer.Infrastructure.Context;
 
@@ -11,9 +12,11 @@ using RentACarServer.Infrastructure.Context;
 namespace RentACarServer.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260209052514_RaservationTableUpdatedProtectionPackageSettedAsNullable")]
+    partial class RaservationTableUpdatedProtectionPackageSettedAsNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -705,22 +708,6 @@ namespace RentACarServer.Infrastructure.Migrations
 
             modelBuilder.Entity("RentACarServer.Domain.ProtectionPackage.ProtectionPackage", b =>
                 {
-                    b.OwnsOne("RentACarServer.Domain.ProtectionPackage.OrderNumber", "OrderNumber", b1 =>
-                        {
-                            b1.Property<Guid>("ProtectionPackageId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<int>("Value")
-                                .HasColumnType("int");
-
-                            b1.HasKey("ProtectionPackageId");
-
-                            b1.ToTable("ProtectionPackages");
-
-                            b1.WithOwner()
-                                .HasForeignKey("ProtectionPackageId");
-                        });
-
                     b.OwnsOne("RentACarServer.Domain.Shared.Name", "Name", b1 =>
                         {
                             b1.Property<Guid>("ProtectionPackageId")
@@ -799,9 +786,6 @@ namespace RentACarServer.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Name")
-                        .IsRequired();
-
-                    b.Navigation("OrderNumber")
                         .IsRequired();
 
                     b.Navigation("Price")

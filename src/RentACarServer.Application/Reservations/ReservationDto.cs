@@ -5,6 +5,7 @@ using RentACarServer.Domain.Customers;
 using RentACarServer.Domain.ProtectionPackage;
 using RentACarServer.Domain.RentalExtras;
 using RentACarServer.Domain.Reservations;
+using RentACarServer.Domain.Reservations.ValueObjects;
 using RentACarServer.Domain.Vehicles;
 
 namespace RentACarServer.Application.Reservations;
@@ -66,6 +67,7 @@ public sealed class ReservationDto : EntityDto
     public decimal Total { get; set; } = default!;
     public string Status { get; set; } = default!;
     public int TotalDay { get; set; } = default!;
+    public PaymentInformation PaymentInformation { get; set; } = default!;
 }
 
 public static class ReservationExtensions
@@ -169,6 +171,7 @@ public static class ReservationExtensions
                 Total = s.Entity.Total.Value,
                 TotalDay = s.Entity.TotalDay.Value,
                 Status = s.Entity.Status.Value,
+                PaymentInformation = s.Entity.PaymentInformation,
                 IsActive = s.Entity.IsActive,
                 CreatedAt = s.Entity.CreatedAt,
                 CreatedBy = s.Entity.CreatedBy.Value,

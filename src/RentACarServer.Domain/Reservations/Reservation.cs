@@ -23,7 +23,8 @@ public sealed class Reservation : Entity, IAggregate
         Note note,
         PaymentInformation paymentInformation,
         Status status,
-        Total total)
+        Total total,
+        TotalDay totalDay)
     {
         SetCustomerId(customerId);
         SetPickUpLocationId(pickUpLocationId);
@@ -39,7 +40,7 @@ public sealed class Reservation : Entity, IAggregate
         SetNote(note);
         SetPaymentInformation(paymentInformation);
         SetStatus(status);
-        SetTotalDay();
+        SetTotalDay(totalDay);
         SetTotal(total);
         SetPickupDateTime();
         SetDeliveryDateTime();
@@ -79,7 +80,8 @@ public sealed class Reservation : Entity, IAggregate
         Note note,
         PaymentInformation paymentInformation,
         Status status,
-        Total total)
+        Total total,
+        TotalDay totalDay)
     {
         var reservation = new Reservation(
             customerId,
@@ -96,14 +98,14 @@ public sealed class Reservation : Entity, IAggregate
             note,
             paymentInformation,
             status,
-            total
+            total,
+            totalDay
         );
 
         return reservation;
     }
 
     #region Behaviors
-
     public void SetCustomerId(IdentityId customerId)
     {
         CustomerId = customerId;
@@ -133,28 +135,9 @@ public sealed class Reservation : Entity, IAggregate
     {
         DeliveryTime = deliveryTime;
     }
-    public void SetTotalDay()
+    public void SetTotalDay(TotalDay totalDay)
     {
-        var pickUpDateTime = PickUpDate.Value.ToDateTime(PickUpTime.Value);
-        var deliveryDateTime = DeliveryDate.Value.ToDateTime(DeliveryTime.Value);
-
-        var totalDays = (deliveryDateTime.Date - pickUpDateTime.Date).Days;
-
-        // Eğer teslim günü son saati, alma günü saatine göre +2 saatten azsa, 1 gün eksilt
-        var sameDayExtraAllowed = DeliveryTime.Value <= PickUpTime.Value.Add(TimeSpan.FromHours(2));
-
-        if (totalDays == 0 || (totalDays == 1 && sameDayExtraAllowed))
-        {
-            TotalDay = new TotalDay(1);
-        }
-        else if (sameDayExtraAllowed)
-        {
-            TotalDay = new TotalDay(totalDays);
-        }
-        else
-        {
-            TotalDay = new TotalDay(totalDays + 1);
-        }
+        TotalDay = totalDay;
     }
 
     public void SetVehicleId(IdentityId vehicleId)
@@ -210,12 +193,10 @@ public sealed class Reservation : Entity, IAggregate
     }
 
     public void SetDeliveryDateTime()
-
     {
         var date = new DateTime(DeliveryDate.Value, DeliveryTime.Value);
         DeliveryDatetime = new(new DateTimeOffset(date));
     }
-
     #endregion
 }
 

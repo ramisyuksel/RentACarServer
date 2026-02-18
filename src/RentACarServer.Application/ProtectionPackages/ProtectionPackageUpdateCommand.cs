@@ -8,67 +8,61 @@ using TS.MediatR;
 using TS.Result;
 
 namespace RentACarServer.Application.ProtectionPackages;
-
-[Permission("protection_package:edit")]
+[Permission("protection_package:update")]
 public sealed record ProtectionPackageUpdateCommand(
     Guid Id,
     string Name,
     decimal Price,
     bool IsRecommended,
-    bool IsActive,
-    List<string>? Coverages) : IRequest<Result<string>>;
+    int OrderNumber,
+    List<string> Coverages,
+    bool IsActive) : IRequest<Result<string>>;
 
 public sealed class ProtectionPackageUpdateCommandValidator : AbstractValidator<ProtectionPackageUpdateCommand>
 {
     public ProtectionPackageUpdateCommandValidator()
     {
-        RuleFor(p => p.Name)
-            .NotEmpty()
-            .WithMessage("Protection package name cannot be empty");
-
-        RuleFor(p => p.Price)
-            .GreaterThanOrEqualTo(0)
-            .WithMessage("Price must be greater than or equal to 0");
+        RuleFor(p => p.Name).NotEmpty().WithMessage("Geçerli bir paket adý girin");
+        RuleFor(p => p.Price).GreaterThan(-1).WithMessage("Fiyat pozitif olmalý");
     }
 }
 
 internal sealed class ProtectionPackageUpdateCommandHandler(
-    IProtectionPackageRepository protectionPackageRepository,
-    IUnitOfWork unitOfWork
-) : IRequestHandler<ProtectionPackageUpdateCommand, Result<string>>
+    IProtectionPackageRepository repository,
+    IUnitOfWork unitOfWork) : IRequestHandler<ProtectionPackageUpdateCommand, Result<string>>
 {
     public async Task<Result<string>> Handle(ProtectionPackageUpdateCommand request, CancellationToken cancellationToken)
     {
-        var package = await protectionPackageRepository.FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
-
+        var package = await repository.FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
         if (package is null)
-            return Result<string>.Failure("Protection package not found");
-
+            return Result<string>.Failure("Güvence paketi bulunamadý");
 
         if (!string.Equals(package.Name.Value, request.Name, StringComparison.OrdinalIgnoreCase))
         {
-            var existsWithNewName = await protectionPackageRepository.AnyAsync(
+            var nameExists = await repository.AnyAsync(
                 p => p.Name.Value == request.Name && p.Id != request.Id,
                 cancellationToken);
 
-            if (existsWithNewName)
-                return Result<string>.Failure($"Protection package with name '{request.Name}' already exists.");
+            if (nameExists)
+                return Result<string>.Failure("Paket adý daha önce tanýmlanmýþ");
         }
 
         Name name = new(request.Name);
         Price price = new(request.Price);
         IsRecommended isRecommended = new(request.IsRecommended);
+        OrderNumber orderNumber = new(request.OrderNumber);
         List<ProtectionCoverage> coverages = request.Coverages.Select(c => new ProtectionCoverage(c)).ToList();
 
         package.SetName(name);
         package.SetPrice(price);
         package.SetIsRecommended(isRecommended);
+        package.SetOrderNumber(orderNumber);
         package.SetCoverages(coverages);
         package.SetStatus(request.IsActive);
 
-        protectionPackageRepository.Update(package);
+        repository.Update(package);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return "Protection package updated successfully.";
+        return "Güvence paketi baþarýyla güncellendi";
     }
 }

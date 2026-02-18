@@ -16,7 +16,7 @@ public sealed record ReservationGetAllQuery : IRequest<IQueryable<ReservationDto
 internal sealed class ReservationGetAllQueryHandler(
     IReservationRepository reservationRepository,
     ICustomerRepository customerRepository,
-    IBranchRepository brancheRepository,
+    IBranchRepository branchRepository,
     IVehicleRepository vehicleRepository,
     ICategoryRepository categoryRepository,
     IProtectionPackageRepository protectionPackageRepository,
@@ -26,7 +26,7 @@ internal sealed class ReservationGetAllQueryHandler(
     public Task<IQueryable<ReservationDto>> Handle(ReservationGetAllQuery request, CancellationToken cancellationToken) => Task.FromResult(reservationRepository.GetAllWithAudit()
         .MapTo(
             customerRepository.GetAll(),
-            brancheRepository.GetAll(),
+            branchRepository.GetAll(),
             vehicleRepository.GetAll(),
             categoryRepository.GetAll(),
             protectionPackageRepository.GetAll(),
