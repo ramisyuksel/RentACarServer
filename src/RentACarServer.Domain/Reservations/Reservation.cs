@@ -1,4 +1,5 @@
 ﻿using RentACarServer.Domain.Abstractions;
+using RentACarServer.Domain.Reservations.Forms;
 using RentACarServer.Domain.Reservations.ValueObjects;
 using RentACarServer.Domain.Shared;
 
@@ -7,6 +8,7 @@ namespace RentACarServer.Domain.Reservations;
 public sealed class Reservation : Entity, IAggregate
 {
     private readonly List<ReservationExtra> _reservationExtras = new();
+    private readonly List<ReservationHistory> _histories = new();
     private Reservation() { }
     private Reservation(
         IdentityId customerId,
@@ -24,7 +26,10 @@ public sealed class Reservation : Entity, IAggregate
         PaymentInformation paymentInformation,
         Status status,
         Total total,
-        TotalDay totalDay)
+        TotalDay totalDay,
+        ReservationHistory history,
+        Form pickUpForm,
+        Form deliveryForm)
     {
         SetCustomerId(customerId);
         SetPickUpLocationId(pickUpLocationId);
@@ -39,13 +44,18 @@ public sealed class Reservation : Entity, IAggregate
         SetReservationExtras(reservationExtras);
         SetNote(note);
         SetPaymentInformation(paymentInformation);
-        SetStatus(status);
+        SetReservationStatus(status);
         SetTotalDay(totalDay);
         SetTotal(total);
         SetPickupDateTime();
         SetDeliveryDateTime();
+        SetReservationNumber();
+        SetHistory(history);
+        SetPickUpForm(pickUpForm);
+        SetDeliveryForm(deliveryForm);
     }
 
+    public ReservationNumber ReservationNumber { get; private set; } = default!;
     public IdentityId CustomerId { get; private set; } = default!;
     public IdentityId PickUpLocationId { get; private set; } = default!;
     public PickUpDate PickUpDate { get; private set; } = default!;
@@ -64,6 +74,9 @@ public sealed class Reservation : Entity, IAggregate
     public PaymentInformation PaymentInformation { get; private set; } = default!;
     public Status Status { get; private set; } = default!;
     public Total Total { get; private set; } = default!;
+    public IReadOnlyCollection<ReservationHistory> Histories => _histories;
+    public Form PickUpForm { get; private set; } = default!;
+    public Form DeliveryForm { get; private set; } = default!;
 
     public static Reservation Create(
         IdentityId customerId,
@@ -81,7 +94,10 @@ public sealed class Reservation : Entity, IAggregate
         PaymentInformation paymentInformation,
         Status status,
         Total total,
-        TotalDay totalDay)
+        TotalDay totalDay,
+        ReservationHistory history,
+        Form pickUpForm,
+        Form deliveryForm)
     {
         var reservation = new Reservation(
             customerId,
@@ -99,7 +115,10 @@ public sealed class Reservation : Entity, IAggregate
             paymentInformation,
             status,
             total,
-            totalDay
+            totalDay,
+            history,
+            pickUpForm,
+            deliveryForm
         );
 
         return reservation;
@@ -176,7 +195,7 @@ public sealed class Reservation : Entity, IAggregate
         PaymentInformation = paymentInformation;
     }
 
-    public void SetStatus(Status status)
+    public void SetReservationStatus(Status status)
     {
         Status = status;
     }
@@ -197,8 +216,30 @@ public sealed class Reservation : Entity, IAggregate
         var date = new DateTime(DeliveryDate.Value, DeliveryTime.Value);
         DeliveryDatetime = new(new DateTimeOffset(date));
     }
+
+    // todo update as unique 
+    private void SetReservationNumber()
+    {
+        var date = DateTime.Now;
+        Random random = new();
+        var num = string.Concat(Enumerable.Range(0, 8).Select(_ => random.Next(10)));
+        string number = "RSV-" + date.Year + "-" + num;
+        ReservationNumber = new(number);
+    }
+
+    public void SetHistory(ReservationHistory history)
+    {
+        _histories.Add(history);
+    }
+
+    public void SetPickUpForm(Form pickUpForm)
+    {
+        PickUpForm = pickUpForm;
+    }
+
+    public void SetDeliveryForm(Form deliveryForm)
+    {
+        DeliveryForm = deliveryForm;
+    }
     #endregion
 }
-
-public sealed record PickUpDatetime(DateTimeOffset Value);
-public sealed record DeliveryDatetime(DateTimeOffset Value);

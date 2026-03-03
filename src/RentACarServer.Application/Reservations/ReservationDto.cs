@@ -37,6 +37,7 @@ public sealed class ReservationVehicleDto
     public string TractionType { get; set; } = default!;
     public int Kilometer { get; set; } = default!;
     public string ImageUrl { get; set; } = default!;
+    public string Plate { get; set; } = default!;
 }
 public sealed class ReservationExtraDto
 {
@@ -46,6 +47,7 @@ public sealed class ReservationExtraDto
 }
 public sealed class ReservationDto : EntityDto
 {
+    public string ReservationNumber { get; set; } = default!;
     public Guid CustomerId { get; set; } = default!;
     public ReservationCustomerDto Customer { get; set; } = default!;
     public Guid PickUpLocationId { get; set; } = default!;
@@ -68,6 +70,7 @@ public sealed class ReservationDto : EntityDto
     public string Status { get; set; } = default!;
     public int TotalDay { get; set; } = default!;
     public PaymentInformation PaymentInformation { get; set; } = default!;
+    public List<ReservationHistory> Histories { get; set; } = default!;
 }
 
 public static class ReservationExtensions
@@ -120,6 +123,7 @@ public static class ReservationExtensions
             .Select(s => new ReservationDto
             {
                 Id = s.Entity.Id,
+                ReservationNumber = s.Entity.ReservationNumber.Value,
                 CustomerId = s.Entity.CustomerId,
                 Customer = new ReservationCustomerDto
                 {
@@ -157,6 +161,7 @@ public static class ReservationExtensions
                     TractionType = s.Vehicle.TractionType.Value,
                     Kilometer = s.Vehicle.Kilometer.Value,
                     ImageUrl = s.Vehicle.ImageUrl.Value,
+                    Plate = s.Vehicle.Plate.Value,
                 },
                 ProtectionPackageId = s.Entity.ProtectionPackageId.Value,
                 ProtectionPackagePrice = s.Entity.ProtectionPackagePrice.Value,
@@ -168,6 +173,7 @@ public static class ReservationExtensions
                     Price = re.Price
                 }).ToList(),
                 Note = s.Entity.Note.Value,
+                Histories = s.Entity.Histories.ToList(),
                 Total = s.Entity.Total.Value,
                 TotalDay = s.Entity.TotalDay.Value,
                 Status = s.Entity.Status.Value,

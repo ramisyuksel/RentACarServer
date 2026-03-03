@@ -152,6 +152,7 @@ internal sealed class ReservationUpdateCommandHandler(
         Note note = new(request.Note);
         Total total = new(request.Total);
         TotalDay totalDay = new(request.TotalDay);
+        ReservationHistory history = new("Rezervayon Güncellendi", "Online rezervasyon güncellendi", DateTimeOffset.Now);
 
         reservation.SetCustomerId(customerId);
         reservation.SetPickUpLocationId(pickUpLocationId);
@@ -175,6 +176,7 @@ internal sealed class ReservationUpdateCommandHandler(
         reservation.SetPickupDateTime();
         reservation.SetDeliveryDateTime();
         reservation.SetTotalDay(totalDay);
+        reservation.SetHistory(history);
         #endregion
 
         reservationRepository.Update(reservation);

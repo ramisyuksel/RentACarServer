@@ -1,5 +1,6 @@
 using FluentValidation;
 using GenericRepository;
+using Microsoft.EntityFrameworkCore;
 using RentACarServer.Application.Behaviors;
 using RentACarServer.Domain.ProtectionPackage;
 using RentACarServer.Domain.ProtectionPackage.ValueObjects;
@@ -36,6 +37,18 @@ internal sealed class ProtectionPackageUpdateCommandHandler(
         var package = await repository.FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
         if (package is null)
             return Result<string>.Failure("Güvence paketi bulunamadý");
+
+        if (package.OrderNumber.Value != request.OrderNumber)
+        {
+            var packages = await repository
+                .WhereWithTracking(p => p.Id != package.Id)
+                .OrderBy(i => i.OrderNumber.Value)
+                .ToListAsync(cancellationToken);
+
+            packages.Insert(request.OrderNumber - 1, package);
+            foreach (var (item, index) in packages.Select((item, index) => (item, index)))
+                item.SetOrderNumber(new(index + 1));
+        }
 
         if (!string.Equals(package.Name.Value, request.Name, StringComparison.OrdinalIgnoreCase))
         {
