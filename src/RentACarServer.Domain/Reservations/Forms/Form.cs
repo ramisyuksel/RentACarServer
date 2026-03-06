@@ -1,4 +1,5 @@
-﻿using RentACarServer.Domain.Reservations.ValueObjects;
+﻿using RentACarServer.Domain.Reservations.Forms.ValueObjects;
+using RentACarServer.Domain.Reservations.ValueObjects;
 using RentACarServer.Domain.Vehicles.ValueObjects;
 
 namespace RentACarServer.Domain.Reservations.Forms;
@@ -60,9 +61,3 @@ public sealed record Form
     }
     #endregion
 }
-
-public sealed record Supplies(string Value);
-
-public sealed record Damage(
-    string Level,
-    string Description);

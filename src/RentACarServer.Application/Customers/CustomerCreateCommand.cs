@@ -3,6 +3,7 @@ using GenericRepository;
 using RentACarServer.Domain.Customers;
 using RentACarServer.Domain.Customers.ValueObjects;
 using RentACarServer.Domain.Shared;
+using RentACarServer.Domain.Users.ValueObjects;
 using TS.MediatR;
 using TS.Result;
 
@@ -52,6 +53,7 @@ internal sealed class CustomerCreateCommandHandler(
         Email email = new(request.Email);
         DrivingLicenseIssuanceDate drivingLicenseIssuanceDate = new(request.DrivingLicenseIssuanceDate);
         FullAddress fullAddress = new(request.FullAddress);
+        Password password = new(request.IdentityNumber); // Varsayılan olarak TC kimlik numarası kullanılıyor
 
         Customer customer = new(
             firstName,
@@ -62,6 +64,7 @@ internal sealed class CustomerCreateCommandHandler(
             email,
             drivingLicenseIssuanceDate,
             fullAddress,
+            password,
             request.IsActive
         );
 

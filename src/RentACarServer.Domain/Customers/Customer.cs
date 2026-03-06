@@ -1,6 +1,7 @@
 ﻿using RentACarServer.Domain.Abstractions;
 using RentACarServer.Domain.Customers.ValueObjects;
 using RentACarServer.Domain.Shared;
+using RentACarServer.Domain.Users.ValueObjects;
 
 namespace RentACarServer.Domain.Customers;
 
@@ -17,6 +18,7 @@ public sealed class Customer : Entity
         Email email,
         DrivingLicenseIssuanceDate drivingLicenseIssuanceDate,
         FullAddress fullAddress,
+        Password password,
         bool isActive)
     {
         SetFirstName(firstName);
@@ -28,6 +30,7 @@ public sealed class Customer : Entity
         SetEmail(email);
         SetDrivingLicenseIssuanceDate(drivingLicenseIssuanceDate);
         SetFullAddress(fullAddress);
+        SetPassword(password);
         SetStatus(isActive);
     }
 
@@ -40,6 +43,9 @@ public sealed class Customer : Entity
     public Email Email { get; private set; } = default!;
     public DrivingLicenseIssuanceDate DrivingLicenseIssuanceDate { get; private set; } = default!;
     public FullAddress FullAddress { get; private set; } = default!;
+    public Password Password { get; private set; } = default!;
+
+    #region Behaviors
 
     public void SetFirstName(FirstName firstName) => FirstName = firstName;
     public void SetLastName(LastName lastName) => LastName = lastName;
@@ -50,4 +56,15 @@ public sealed class Customer : Entity
     public void SetEmail(Email email) => Email = email;
     public void SetDrivingLicenseIssuanceDate(DrivingLicenseIssuanceDate date) => DrivingLicenseIssuanceDate = date;
     public void SetFullAddress(FullAddress fullAddress) => FullAddress = fullAddress;
+    public void SetPassword(Password password) => Password = password;
+
+    public bool VerifyPasswordHash(string password)
+    {
+        using var hmac = new System.Security.Cryptography.HMACSHA512(Password.PasswordSalt);
+        var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+        return computedHash.SequenceEqual(Password.PasswordHash);
+    }
+    #endregion
+
+
 }

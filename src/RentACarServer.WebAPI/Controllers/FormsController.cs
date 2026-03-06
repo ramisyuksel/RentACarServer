@@ -5,7 +5,7 @@ using TS.MediatR;
 
 namespace RentACarServer.WebAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("reservation-form")]
     [ApiController]
     public class FormsController(
         ISender sender) : ControllerBase
