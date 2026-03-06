@@ -15,41 +15,44 @@ public static class ServiceRegistrar
     {
         services.Configure<JwtOptions>(configuration.GetSection("Jwt"));
         services.ConfigureOptions<JwtSetupOptions>();
+        
         services.AddAuthentication().AddJwtBearer();
         services.AddAuthorization();
 
         services.Configure<MailSettingOptions>(configuration.GetSection("MailSettings"));
+        
+        var mailSettings = configuration
+            .GetSection("MailSettings")
+            .Get<MailSettingOptions>() ?? new MailSettingOptions();
+        
 
-        using var scoped = services.BuildServiceProvider().CreateScope();
-
-
-        var mailSettings = scoped.ServiceProvider.GetRequiredService<IOptions<MailSettingOptions>>();
-
-
-        if (string.IsNullOrEmpty(mailSettings.Value.UserId))
+        if (string.IsNullOrEmpty(mailSettings.UserId))
         {
-            services.AddFluentEmail(mailSettings.Value.Email)
+            services.AddFluentEmail(mailSettings.Email)
                 .AddSmtpSender(
-                    mailSettings.Value.Smtp,
-                    mailSettings.Value.Port);
+                    mailSettings.Smtp,
+                    mailSettings.Port);
         }
 
         else
         {
-            services.AddFluentEmail(mailSettings.Value.Email)
+            services.AddFluentEmail(mailSettings.Email)
                 .AddSmtpSender(
-                    mailSettings.Value.Smtp,
-                    mailSettings.Value.Port,
-                    mailSettings.Value.UserId,
-                    mailSettings.Value.Password);
+                    mailSettings.Smtp,
+                    mailSettings.Port,
+                    mailSettings.UserId,
+                    mailSettings.Password);
         }
         services.AddHttpContextAccessor();
-
-        services.AddDbContext<ApplicationDbContext>(opt =>
+        
+        services.AddDbContext<ApplicationDbContext>(options =>
         {
-            string con = configuration.GetConnectionString("SqlServer")!;
-            opt.UseSqlServer(con);
+            var connectionString = configuration.GetConnectionString("SqlServer")
+                                   ?? throw new InvalidOperationException("Connection string 'SqlServer' not found.");
+
+            options.UseSqlServer(connectionString);
         });
+
 
         services.AddScoped<IUnitOfWork>(srv => srv.GetRequiredService<ApplicationDbContext>());
 
@@ -60,6 +63,7 @@ public static class ServiceRegistrar
             .AsImplementedInterfaces()
             .WithScopedLifetime()
         );
+        
         return services;
     }
 }

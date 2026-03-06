@@ -16,7 +16,7 @@ public static class ServiceRegistrar
         {
             cfr.RegisterServicesFromAssembly(typeof(ServiceRegistrar).Assembly);
             cfr.AddOpenBehavior(typeof(ValidationBehavior<,>));
-            cfr.AddOpenBehavior(typeof(ValidationBehavior<,>));
+            cfr.AddOpenBehavior(typeof(PermissionBehavior<,>));
         });
 
         services.AddValidatorsFromAssembly(typeof(ServiceRegistrar).Assembly);
